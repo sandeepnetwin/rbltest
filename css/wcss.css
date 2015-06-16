@@ -1,0 +1,139 @@
+#deviceTime {
+  float: left;
+}
+#deviceTime span {
+  font-size: 21pt;
+  width: 35px;
+}
+#deviceTime span.sep {
+  font-size: 12pt;
+  top: 0;
+  width: 4px;
+}
+#deviceTime span.second, #deviceTime span.ampm {
+  font-size: 9pt;
+}
+#deviceTime span.second {
+  top: -5px;
+  left: auto;
+}
+#deviceTime span.ampm {
+  left: -55px;
+}
+#deviceDate {
+  float: right;
+  padding: 0 5px 5px 5px;
+}
+
+/******** Button Styles **********/
+
+
+button {
+	padding: 4px 12px;
+	font-family: Quicksand, sans-serif;
+	font-size: 12pt;
+	font-weight: 400;
+	text-transform: uppercase;
+	text-align: center;
+	line-height: 14pt;
+	color: white;
+	background-color: #397F19;
+	border: 0px;
+	border-radius: 12px;
+	cursor: pointer;
+}
+button:hover {
+	color: #F7F1CD;
+}
+button.on {
+	background-color: #397F19;
+}
+button.off {
+	background-color: #7D1921;
+}
+button.execute {
+	background-color: #2E3959;
+    margin: 2px;
+}
+
+button.toggle {
+	background-repeat: no-repeat;
+	background-position: center center;
+	width: 304px;
+	padding: 4px;
+	text-align: center;
+	color: #DDD;
+}
+button.toggle.on {
+	background-color: #6040ff;
+	background-image: url('../images/on.png');
+}
+button.toggle.on:hover {
+	color: #F7F1CD;
+	background-image: url('../images/off.png');
+}
+button.toggle.off {
+	background-color: #7D1921;
+	background-image: url('../images/off.png');
+}
+button.toggle.off.choice {
+	background-color: #397F19;
+	background-image: url('../images/off.png');
+}
+button.toggle.off:hover {
+	color: #F7F1CD;
+	background-image: url('../images/on.png');
+}
+button.toggle span.togglesep {
+	display: inline-block;
+	width: 50px;
+}
+button.toggle span.toggleleft {
+	display: inline-block;
+	text-align: right;
+	width: 120px;
+}
+button.toggle span.toggleright {
+	display: inline-block;
+	text-align:left;
+	width: 120px;
+}
+button.toggle.on span.toggleright, button.toggle.off span.toggleleft {
+	font-weight: 400;
+}
+button.toggle.off span.toggleright, button.toggle.on span.toggleleft {
+	font-weight: 700;
+	color: white;
+}
+
+#controls button#cSubmit {
+	background-color: #397F19;
+}
+#controls button#cSubmit:disabled {
+	background-color: #AAA;
+}
+button.danger {
+	background-color: #7D1921;
+}
+
+button.toggle.narrow {
+	width: 140px;
+}
+button.toggle.narrow span.toggleright, button.toggle.narrow span.toggleleft {
+	width: 36px;
+}
+
+#options button, #controls button {
+	margin: 4px 0px;
+}
+
+button.weekday {
+	width:100%;
+}
+button.pushon.on {
+	font-weight: 700;
+}
+
+input.timeInput {
+	font-size:12pt;
+}

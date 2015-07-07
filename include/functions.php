@@ -60,6 +60,16 @@ include("config.php");
 			 
 			die("Could not receive data: [$iErrorcode] $sErrormsg \n");
 		}
+		
+		/* $fp = @ fsockopen("udp://$sServer", $iPort, $iErrorcode, $sErrormsg,3);
+		if (!$fp) {
+			die("Could not send data: [$iErrorcode] $sErrormsg \n");
+		} else {
+			fwrite($fp, "$sInput");
+			$sReply = fread($fp, 1024);
+			fclose($fp);
+		} */
+		
 		//echo '<pre>'; print_r($sReply); die;
 		//Check for invalid response.
 		$iCommaCount = substr_count($sReply, ",");
@@ -135,6 +145,7 @@ include("config.php");
 		$aReturn['time'] = $aResponse['4'];
 		$aReturn['valves'] = $aResponse['7'];
 		$aReturn['relay'] = $aResponse['8'];
+		$aReturn['powercenter'] = $aResponse['9'];
 		
 		$aReturn['controller_temp'] = $aResponse['15'];
 		$aReturn['temp_sensor_1'] = $aResponse['16'];
@@ -172,6 +183,12 @@ include("config.php");
 		$sResponse = send_to_rlb($sUrl);		
 		return $sResponse;
 	}
+
+	function onoff_rlb_powercenter($sPowercenterStatus){
+		$sUrl = 'B,'.$sPowercenterStatus;
+		$sResponse = send_to_rlb($sUrl);		
+		return $sResponse;
+	}
 	
 	function onoff_rlb_valve($sRelayStatus){
 		$sUrl = 'V,'.$sRelayStatus;
@@ -206,4 +223,29 @@ include("config.php");
 		}
 		return $iMode;
 	}
+	
+	/*function to return device name
+	* @iDeviceType => 1-Relay, 2-Valve, 3-Powercenter
+	* @iDeviceNum => As per availabel device type start from 0 - n
+	*/
+	function get_device_name($iDeviceType, $iDeviceNum){
+		$aDeviceType = array(1, 2, 3);
+		$aDeviceTypeName = array( '1' => 'Relay', '2' => 'Valve' , '3' => 'Powercenter');
+		$aTbl = array('1' => 'rlb_relays', '2' => 'rlb_valves', '3' => 'rlb_powercenters');
+		$aFldWhere = array('1' => 'relay_number', '2' => 'valve_number', '3' => 'powercenter_number');
+		$aFldSel = array('1' => 'relay_name', '2' => 'valve_name', '3' => 'powercenter_name');
+		$sDeviceNameAE = $aDeviceTypeName[$iDeviceType].' '.$iDeviceNum;
+		
+		if(is_numeric($iDeviceNum) && in_array($iDeviceType, $aDeviceType)){
+			$sSqlEdit = "SELECT * FROM ". $aTbl[$iDeviceType] ." WHERE ". $aFldWhere[$iDeviceType] ." ='".$iDeviceNum."'";
+			$rResultEdit = mysql_query($sSqlEdit) or die('ERR: @sSqlEdit=> '.mysql_error());
+			$iCnt = mysql_num_rows($rResultEdit);
+			if($iCnt){
+				$aRowEdit = mysql_fetch_assoc($rResultEdit);
+				$sDeviceNameAE = stripslashes($aRowEdit[$aFldSel[$iDeviceType]]);
+			}
+		}
+		return $sDeviceNameAE;
+	}
+	
 ?>

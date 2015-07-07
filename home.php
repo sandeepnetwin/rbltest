@@ -17,6 +17,9 @@ $aRelayName = isset($_REQUEST['relayname']) ? $_REQUEST['relayname'] : '' ;
 $aRelayStatus = isset($_REQUEST['relaystatus']) ? $_REQUEST['relaystatus'] : '' ;
 $aValveName = isset($_REQUEST['valvename']) ? $_REQUEST['valvename'] : '' ;
 $aValveStatus = isset($_REQUEST['valvestatus']) ? $_REQUEST['valvestatus'] : '' ;
+$aPowercenterName = isset($_REQUEST['powercenter']) ? $_REQUEST['powercenter'] : '' ;
+$aPowercenterStatus = isset($_REQUEST['powercenterstatus']) ? $_REQUEST['powercenterstatus'] : '' ;
+
 $iMode = isset($_REQUEST['relay_mode']) ? $_REQUEST['relay_mode'] : '' ;
 $sMTask = isset($_REQUEST['task']) ? $_REQUEST['task'] : '' ;
 $sErrMsg = '';
@@ -34,13 +37,15 @@ if(!$sIpAddress && IP_ADDRESS == ''){
 $sResponse = get_rlb_status();
 $sValves = $sResponse['valves'];
 $sRelays = $sResponse['relay'];
+$sPowercenter = $sResponse['powercenter'];
 $sTime = $sResponse['time'];
 $aTime = explode(':',$sTime);
 $iRelayCount = strlen($sRelays);
 $iValveCount = strlen($sValves);
+$iPowercenterCount = strlen($sPowercenter);
 
-print_r($sResponse);
-print_r($aTime);
+//print_r($sResponse);
+//print_r($aTime);
 
 //change mode of the relay board
 if( $sMTask == 'change_mode' && $iMode){
@@ -115,7 +120,25 @@ if(is_array($aValveName) && is_array($aValveStatus)){
 	}
 }
 
-
+//Change Status of powercenter i.e. on off them
+if(is_array($aPowercenterName) && is_array($aPowercenterStatus)){
+	$sPowercenterName = $aPowercenterName[0];
+	$iPowercenterStatus = $aPowercenterStatus[0];
+	/* if($iPowercenterStatus == 0 ){
+		$iPowercenterNewSatus = 1;
+	}else if($iPowercenterStatus == 1 ){
+		$iPowercenterNewSatus = 0;
+	} */
+	$sPowercenterNewResp = replace_return($sPowercenter, $iPowercenterStatus, $sPowercenterName );
+	//echo '<br/>@sPowercenterNewResp=> ';
+	//echo $sPowercenterNewResp;
+	if($iMode == 2){
+		onoff_rlb_powercenter($sPowercenterNewResp);
+		header('Location: home.php');exit;
+	}else{
+		$sErrMsg = 'You can perform this operation in manual mode only.';
+	}
+}
 
 
 #OUTPUT
@@ -204,10 +227,11 @@ EOF;
 							$sRelayVal = 'off';
 							if($iRelayVal)
 								$sRelayVal = 'on';
+							$sRelayNameDb = get_device_name(1, $i);
 							echo <<<EOF
 							<tr>
 								<td class="station_name" valign="top" >
-									Relay $i
+									<a href="rename.php?dn=$i&dt=1" >$sRelayNameDb</a>
 								</td>
 								<td class="station_running" colspan="2" >
 									<form action="" method="post" name="frmstation$i" id="frmstation$i" >
@@ -268,10 +292,11 @@ EOF;
 								$sValveVal1 = 'on';
 							if($iValveVal == 2)
 								$sValveVal2 = 'on';
+							$sValveNameDb = get_device_name(2, $i);
 							echo <<<EOF
 							<tr>
 								<td class="station_name" valign="top" >
-									Valve $i
+									<a href="rename.php?dn=$i&dt=2" >$sValveNameDb</a>
 								</td>
 								<td class="station_running" >
 									<form action="" method="post" name="frmvalvei$i" id="frmvalvei$i" >
@@ -308,6 +333,68 @@ EOF;
 						<td valign="top" colspan="3" >&nbsp;
 						</td>
 					</tr>
+					
+					
+					<?php 
+					if($iPowercenterCount){ 
+						echo <<<EOF
+						<tr>
+							<th class="station_name" valign="top" >
+								Power center List
+							</th>
+							<th></th>
+							<th></th>
+						</tr>
+EOF;
+						for ($i=0;$i < $iPowercenterCount; $i++){
+							$iPowercenterVal = $sPowercenter[$i];
+							$iPowercenterNewValSb = 1;
+							if($iPowercenterVal == 1){
+								$iPowercenterNewValSb = 0;
+							}
+							$sPowercenterVal = 'off';
+							if($iPowercenterVal)
+								$sPowercenterVal = 'on';
+							$sPowercenterNameDb = get_device_name(3, $i);
+							echo <<<EOF
+							<tr>
+								<td class="station_name" valign="top" >
+									<a href="rename.php?dn=$i&dt=3" >$sPowercenterNameDb</a>
+								</td>
+								<td class="station_running" colspan="2" >
+									<form action="" method="post" name="frmpwrcntr$i" id="frmpwrcntr$i" >
+
+									<table>
+										<tr>
+											<td>
+												<button id="r$i" class="toggle manual narrow $sPowercenterVal" onclick="document.getElementById('frmpwrcntr$i').submit();" ><span class="toggleleft">On</span><span class="togglesep">&nbsp;</span><span class="toggleright">Off</span></button>
+												<input type="hidden" name="powercenter[]" value="$i" />
+												<input type="hidden" name="powercenterstatus[]" value="$iPowercenterNewValSb" />
+											</td>
+											<!--<td>
+												&nbsp;<a href="programs.php?rn=$i" title="Set Program for Relay $i" class="btn btn-primary btn-xs">Programs</a>
+											</td>
+											<td>
+												<input name="endtime[]" value="" />
+											</td>-->
+										</tr>
+									</table>
+									</form>
+								<!--</td>
+								<td>-->
+
+								</td>
+							</tr>
+EOF;
+						}
+					}
+					?>
+					<tr>
+						<td valign="top" colspan="3" >&nbsp;
+						</td>
+					</tr>
+					
+					
 				</table>
 			</div>
 		  </div>

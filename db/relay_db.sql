@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: May 12, 2015 at 11:04 AM
+-- Generation Time: Jul 07, 2015 at 04:39 AM
 -- Server version: 5.1.36
 -- PHP Version: 5.3.0
 
@@ -44,6 +44,40 @@ INSERT INTO `rlb_modes` (`mode_id`, `mode_name`, `mode_status`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `rlb_powercenters`
+--
+
+CREATE TABLE IF NOT EXISTS `rlb_powercenters` (
+  `powercenter_id` int(11) NOT NULL AUTO_INCREMENT,
+  `powercenter_number` int(11) NOT NULL,
+  `powercenter_name` varchar(100) NOT NULL,
+  PRIMARY KEY (`powercenter_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 ;
+
+--
+-- Dumping data for table `rlb_powercenters`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rlb_relays`
+--
+
+CREATE TABLE IF NOT EXISTS `rlb_relays` (
+  `relay_id` int(11) NOT NULL AUTO_INCREMENT,
+  `relay_number` int(11) NOT NULL,
+  `relay_name` varchar(100) NOT NULL,
+  PRIMARY KEY (`relay_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `rlb_relays`
+--
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `rlb_relay_prog`
 --
 
@@ -61,3 +95,26 @@ CREATE TABLE IF NOT EXISTS `rlb_relay_prog` (
   `relay_prog_active` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`relay_prog_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `rlb_relay_prog`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rlb_valves`
+--
+
+CREATE TABLE IF NOT EXISTS `rlb_valves` (
+  `valve_id` int(11) NOT NULL AUTO_INCREMENT,
+  `valve_number` int(11) NOT NULL,
+  `valve_name` varchar(100) NOT NULL,
+  PRIMARY KEY (`valve_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+--
+-- Dumping data for table `rlb_valves`
+--
+
+

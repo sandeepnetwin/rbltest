@@ -59,12 +59,22 @@ if( $sMTask == 'change_mode' && $iMode){
 	
 	if($iMode == 3 || $iMode == 1){ //1-auto, 2-manual, 3-timeout
 		//off all relays
-		$sRelayNewResp = str_replace('1','0',$sRelays);
-		onoff_rlb_relay($sRelayNewResp);
+		if($iRelayCount){
+			$sRelayNewResp = str_replace('1','0',$sRelays);
+			onoff_rlb_relay($sRelayNewResp);
+		}
 		
 		//off all valves
-		$sValveNewResp = str_replace(array('1','2'), '0', $sValves);
-		onoff_rlb_valve($sValveNewResp);		
+		if($iValveCount){
+			$sValveNewResp = str_replace(array('1','2'), '0', $sValves);
+			onoff_rlb_valve($sValveNewResp);
+		}
+		
+		//off all power centers
+		if($iPowercenterCount){
+			$sPowercenterNewResp = str_replace('1','0',$sPowercenter);
+			onoff_rlb_powercenter($sPowercenterNewResp);
+		}
 	}
 	header('Location: home.php');exit;
 }else{
